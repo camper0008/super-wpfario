@@ -87,6 +87,65 @@ namespace SuperMario
 
             Vector2 dist = dyn_sprite.Hitbox.AabbDistance(other.Hitbox);
 
+            int xWorkToResolve;
+            int xResolved;
+            if (dyn_sprite.Hitbox.pos.x > other.Hitbox.pos.x + other.Hitbox.size.x * 0.5)
+            {
+                xResolved = (other.Hitbox.pos.x + other.Hitbox.size.x);
+                xWorkToResolve = xResolved - dyn_sprite.Hitbox.pos.x;
+            }
+            else // if (dyn_sprite.Hitbox.pos.x < other.Hitbox.pos.x)
+            {
+                xResolved = (other.Hitbox.pos.x - dyn_sprite.Hitbox.size.x);
+                xWorkToResolve = dyn_sprite.Hitbox.pos.x - xResolved;
+            }
+
+            int yWorkToResolve;
+            int yResolved;
+            if (dyn_sprite.Hitbox.pos.y > other.Hitbox.pos.y + other.Hitbox.size.y * 0.5)
+            {
+                yResolved = (other.Hitbox.pos.y + other.Hitbox.size.y);
+                yWorkToResolve = yResolved - dyn_sprite.Hitbox.pos.y;
+            }
+            else // if (dyn_sprite.Hitbox.pos.x < other.Hitbox.pos.x)
+            {
+                yResolved = (other.Hitbox.pos.y - dyn_sprite.Hitbox.size.y);
+                yWorkToResolve = dyn_sprite.Hitbox.pos.y - yResolved;
+            }
+
+
+            if (Math.Abs(xWorkToResolve) < Math.Abs(yWorkToResolve))
+            {
+                // resolve x first, since it would be the easiest fix
+
+                dyn_sprite.Pos.x = xResolved;
+
+                if (!dyn_sprite.Hitbox.Collides(other.Hitbox)) return;
+
+                dyn_sprite.Pos.y = yResolved;
+            }
+            else // if (yWorkToResolve < xWorkToResolve)
+            {
+                // resolve y first
+
+                dyn_sprite.Pos.y = yResolved;
+
+                if (!dyn_sprite.Hitbox.Collides(other.Hitbox)) return;
+
+                dyn_sprite.Pos.x = xResolved;
+            }
+
+        }
+
+        /*
+        public void PhysicsTickResolveCollisions(DynamicSprite dyn, Sprite other)
+        {
+            var dyn_sprite = (Sprite)dyn;
+            if ((!dyn_sprite.Hitbox.Collides(other.Hitbox)) || (dyn_sprite == other))
+                return;
+
+            Vector2 dist = dyn_sprite.Hitbox.AabbDistance(other.Hitbox);
+
             float xTimeToCollide = dyn.Vel().x != 0 ? Math.Abs(
                 dist.x / dyn.Vel().x
             ) : 0;
@@ -192,14 +251,15 @@ namespace SuperMario
                 }
             }
         }
+        */
 
         public void PhysicsTickCollisions()
         {
-            for (int i = 0; i < dynamics.Length; i++)
+            for (int dyn_idx = 0; dyn_idx < dynamics.Length; dyn_idx++)
             {
-                for (int j = 0; j < renderables.Length; j++)
+                for (int ren_idx = 0; ren_idx < renderables.Length; ren_idx++)
                 {
-                    PhysicsTickResolveCollisions(dynamics[i], renderables[i]);
+                    PhysicsTickResolveCollisions(dynamics[dyn_idx], renderables[ren_idx]);
                 }
             }
         }

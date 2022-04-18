@@ -34,14 +34,17 @@ namespace SuperMario
         }
         private Sprite[] LevelStaticSprites()
         {
-            int blocks = 10;
-            var sprites = new Sprite[blocks];
+            int blocks = 11;
+            var sprites = new Sprite[blocks + 1];
+            Image groundImage;
             for (int i = 0; i < blocks; i++)
             {
-                var groundImage = Utils.ImageFromPath(@"sprites/ground.png");
+                groundImage = Utils.ImageFromPath(@"sprites/ground.png");
                 var ground = new Sprite(new Vector2(120 * i, Convert.ToInt32(900 - 120)), new Vector2(120, 120), groundImage, null);
                 sprites[i] = ground;
             }
+            groundImage = Utils.ImageFromPath(@"sprites/ground.png");
+            sprites[11] = new Sprite(new Vector2(120 * 3, Convert.ToInt32(900 - 240)), new Vector2(120, 120), groundImage, null);
             return sprites;
         }
         private void HandleKeyUp(object sender, KeyEventArgs e)
