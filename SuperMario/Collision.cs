@@ -28,30 +28,6 @@ namespace SuperMario
             return false;
         }
 
-        public Vector2 AabbDistance(Hitbox other)
-        {
-            Vector2 dist = new Vector2(0, 0);
-
-            if (this.pos.x < other.pos.x)
-            {
-                dist.x = other.pos.x - (this.pos.x + this.size.x);
-            }
-            else //if (this.pos.x > other.pos.x)
-            {
-                dist.x = this.pos.x - (other.pos.x + other.size.x);
-            }
-
-            if (this.pos.y < other.pos.y)
-            {
-                dist.y = other.pos.x - (this.pos.y + this.size.y);
-            }
-            else //if (this.pos.y > other.pos.y)
-            {
-                dist.y = this.pos.y - (other.pos.y + other.size.y);
-            }
-
-            return dist;
-        }
     }
 
 }

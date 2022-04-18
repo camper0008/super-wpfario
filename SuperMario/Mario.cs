@@ -50,8 +50,6 @@ namespace SuperMario
             if (this.Ctx!.IsKeyDown(Key.A))
                 velocity.x -= 1 * modifier;
 
-            this.Pos.x += velocity.x;
-            this.Pos.y += velocity.y;
 
             var collisions = this.Ctx!.CollidingObjects(this.Hitbox);
 
@@ -72,6 +70,9 @@ namespace SuperMario
             }
 
             this.CheckAnimationState();
+
+            this.Pos.x += velocity.x;
+            this.Pos.y += velocity.y;
 
         }
 

@@ -101,8 +101,6 @@ namespace SuperMario
             if ((!dyn_sprite.Hitbox.Collides(other.Hitbox)))
                 return;
 
-            Vector2 dist = dyn_sprite.Hitbox.AabbDistance(other.Hitbox);
-
             int xWorkToResolve;
             int xResolved;
             if (dyn_sprite.Hitbox.pos.x > other.Hitbox.pos.x + other.Hitbox.size.x * 0.5)
