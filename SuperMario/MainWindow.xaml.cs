@@ -34,17 +34,17 @@ namespace SuperMario
         }
         private Sprite[] LevelStaticSprites()
         {
-            int blocks = 11;
+            int blocks = 80;
             var sprites = new Sprite[blocks + 1];
             Image groundImage;
             for (int i = 0; i < blocks; i++)
             {
                 groundImage = Utils.ImageFromPath(@"sprites/ground.png");
-                var ground = new Sprite(new Vector2(120 * i, Convert.ToInt32(900 - 120)), new Vector2(120, 120), groundImage, null);
+                var ground = new Sprite(new Vector2(80 * i, Convert.ToInt32(900 - 80)), new Vector2(80, 80), groundImage, null);
                 sprites[i] = ground;
             }
             groundImage = Utils.ImageFromPath(@"sprites/ground.png");
-            sprites[11] = new Sprite(new Vector2(120 * 3, Convert.ToInt32(900 - 240)), new Vector2(120, 120), groundImage, null);
+            sprites[blocks] = new Sprite(new Vector2(80 * 3, Convert.ToInt32(900 - 80 * 2)), new Vector2(80, 80), groundImage, null);
             return sprites;
         }
         private void HandleKeyUp(object sender, KeyEventArgs e)
@@ -62,6 +62,7 @@ namespace SuperMario
             canvas.Background = Brushes.Blue;
             canvas.Width = 1400;
             canvas.Height = 900;
+            canvas.ClipToBounds = true;
 
             this.Content = canvas;
             this.canvas = canvas;
@@ -69,7 +70,7 @@ namespace SuperMario
 
         private void InitializeContext()
         {
-            var player = new Mario(new Vector2(0, 0), new Vector2(120, 120));
+            var player = new Mario(new Vector2(0, 0), new Vector2(80, 80));
             var ctx = new Context(LevelStaticSprites(), new DynamicSprite[0], player, canvas!);
             this.ctx = ctx;
         }

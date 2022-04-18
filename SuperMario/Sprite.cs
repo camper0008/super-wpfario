@@ -41,7 +41,6 @@ namespace SuperMario
 
     interface DynamicSprite
     {
-        public abstract Vector2 Vel();
         public abstract void Tick();
     }
     interface AnimatedSprite

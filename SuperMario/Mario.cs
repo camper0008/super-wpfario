@@ -8,6 +8,7 @@ namespace SuperMario
     enum MarioAnimationState
     {
         Standing,
+        Walking,
         Running,
         Jumping,
     }
@@ -18,26 +19,78 @@ namespace SuperMario
         bool StateChanged = true;
         bool FacingRight = true;
         Vector2 velocity = new(0, 0);
+        int TimeFallen = 0;
+        bool InAir = true;
+        bool Sprinting = false;
+        bool StoppedJump = false;
         public Mario(Vector2 pos, Vector2 size) : base(pos, size, Utils.ImageFromPath("sprites/mario_stand.png"), null) { }
         public void Tick()
         {
-            int modifier = 1;
-            Vector2 vel = new Vector2(0, 0);
-            if (this.Ctx!.IsKeyDown(Key.LeftShift) || this.Ctx!.IsKeyDown(Key.RightShift))
-                modifier = 3;
-            if (this.Ctx!.IsKeyDown(Key.D))
-                vel.x += 2 * modifier;
-            if (this.Ctx!.IsKeyDown(Key.A))
-                vel.x -= 2 * modifier;
+            this.velocity = new Vector2(0, 0);
 
-            if (vel.x != 0)
+            if (this.Ctx!.IsKeyDown(Key.W) && !StoppedJump)
+            {
+                velocity.y -= 3 * (14 - TimeFallen);
+            }
+            else
+            {
+                StoppedJump = true;
+                velocity.y += Math.Max(0, Math.Min(40, 3 * (TimeFallen - 5)));
+            }
+
+            int modifier = 6;
+            Sprinting = false;
+            if (this.Ctx!.IsKeyDown(Key.LeftShift) || this.Ctx!.IsKeyDown(Key.RightShift))
+            {
+                modifier = 24;
+                Sprinting = true;
+            }
+            if (this.Ctx!.IsKeyDown(Key.D))
+                velocity.x += 1 * modifier;
+            if (this.Ctx!.IsKeyDown(Key.A))
+                velocity.x -= 1 * modifier;
+
+            this.Pos.x += velocity.x;
+            this.Pos.y += velocity.y;
+
+            var collisions = this.Ctx!.CollidingObjects(this.Hitbox);
+
+            this.Hitbox.pos.y++;
+            var isStanding = this.Ctx!.CollidingObjects(this.Hitbox);
+            this.Hitbox.pos.y--;
+
+            InAir = collisions.Length == 0 && isStanding.Length == 0;
+
+            if (InAir)
+            {
+                TimeFallen++;
+            }
+            else
+            {
+                TimeFallen = 0;
+                StoppedJump = false;
+            }
+
+            this.CheckAnimationState();
+
+        }
+
+        void CheckAnimationState()
+        {
+            if (velocity.x != 0)
             {
                 this.StateChanged = true;
                 AnimState = MarioAnimationState.Running;
-                FacingRight = vel.x > 0;
-                MarioRunFrame += 1;
-                if (MarioRunFrame > 23)
-                    MarioRunFrame = 0;
+                FacingRight = velocity.x > 0;
+                if (Sprinting)
+                {
+                    MarioRunFrame += 2;
+                }
+                else
+                {
+                    MarioRunFrame += 1;
+                }
+                MarioRunFrame %= 12;
             }
             else if (this.AnimState != MarioAnimationState.Standing)
             {
@@ -46,13 +99,10 @@ namespace SuperMario
                 AnimState = MarioAnimationState.Standing;
             }
 
-            this.velocity.x = vel.x;
-            this.velocity.y = 3;
-        }
-
-        public Vector2 Vel()
-        {
-            return this.velocity;
+            if (this.InAir)
+            {
+                this.AnimState = MarioAnimationState.Jumping;
+            }
         }
 
         public void Animate()
@@ -66,8 +116,11 @@ namespace SuperMario
                     path = "sprites/mario_stand.png";
                     break;
                 case MarioAnimationState.Running:
-                    int clamped = (int)Math.Floor(MarioRunFrame / 8.0);
+                    var clamped = (int)Math.Floor(MarioRunFrame / 4.0);
                     path = $"sprites/mario_run_{clamped}.png";
+                    break;
+                case MarioAnimationState.Jumping:
+                    path = $"sprites/mario_jump.png";
                     break;
                 default:
                     path = "sprites/mario_stand.png";

@@ -16,6 +16,7 @@ namespace SuperMario
 
         public bool Collides(Hitbox other)
         {
+            if (this == other) return false;
             if (this.pos.x < other.pos.x + other.size.x &&
                 this.pos.x + this.size.x > other.pos.x &&
                 this.pos.y < other.pos.y + other.size.y &&
