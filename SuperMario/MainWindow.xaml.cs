@@ -35,7 +35,9 @@ namespace SuperMario
         private Sprite[] LevelStaticSprites()
         {
             int blocks = 80;
-            var sprites = new Sprite[blocks + 1];
+            int wall_height = 5;
+            int roof_blocks = 10;
+            var sprites = new Sprite[blocks + wall_height + roof_blocks];
             Image groundImage;
             for (int i = 0; i < blocks; i++)
             {
@@ -43,8 +45,21 @@ namespace SuperMario
                 var ground = new Sprite(new Vector2(80 * i, Convert.ToInt32(900 - 80)), new Vector2(80, 80), groundImage, null);
                 sprites[i] = ground;
             }
-            groundImage = Utils.ImageFromPath(@"sprites/ground.png");
-            sprites[blocks] = new Sprite(new Vector2(80 * 3, Convert.ToInt32(900 - 80 * 2)), new Vector2(80, 80), groundImage, null);
+
+            for (int i = 0; i < wall_height; i++)
+            {
+                groundImage = Utils.ImageFromPath(@"sprites/ground.png");
+                var ground = new Sprite(new Vector2(80 * 8, Convert.ToInt32(900 - 80 * (i + 1))), new Vector2(80, 80), groundImage, null);
+                sprites[i + blocks] = ground;
+            }
+
+            for (int i = 0; i < roof_blocks; i++)
+            {
+                groundImage = Utils.ImageFromPath(@"sprites/ground.png");
+                var ground = new Sprite(new Vector2(80 * 15 + 80 * i, Convert.ToInt32(900 - 80 * wall_height)), new Vector2(80, 80), groundImage, null);
+                sprites[i + blocks + wall_height] = ground;
+            }
+
             return sprites;
         }
         private void HandleKeyUp(object sender, KeyEventArgs e)

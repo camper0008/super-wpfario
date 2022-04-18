@@ -54,10 +54,10 @@ namespace SuperMario
             var collisions = this.Ctx!.CollidingObjects(this.Hitbox);
 
             this.Hitbox.pos.y++;
-            var isStanding = this.Ctx!.CollidingObjects(this.Hitbox);
+            var isStanding = this.Ctx!.CollidingObjects(this.Hitbox).Length > 0;
             this.Hitbox.pos.y--;
 
-            InAir = collisions.Length == 0 && isStanding.Length == 0;
+            InAir = collisions.Length == 0 && !isStanding;
 
             if (InAir)
             {
@@ -68,6 +68,16 @@ namespace SuperMario
                 TimeFallen = 0;
                 StoppedJump = false;
             }
+
+            this.Hitbox.pos.y--;
+            var hitRoof = this.Ctx!.CollidingObjects(this.Hitbox).Length > 0;
+            this.Hitbox.pos.y++;
+
+            if (hitRoof && !isStanding && InAir)
+            {
+                TimeFallen = Math.Max(14, TimeFallen);
+            }
+
 
             this.CheckAnimationState();
 
