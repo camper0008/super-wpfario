@@ -35,13 +35,25 @@ namespace SuperMario
             if (this.FacingRight)
             {
                 this.Hitbox.pos.x++;
-                FacingRight = this.Ctx!.CollidingObjects(this.Hitbox).Length == 0;
+                var RightCollision = this.Ctx!.CollidingObjects(this.Hitbox);
+                FacingRight = RightCollision.Length == 0;
+                if (RightCollision.Length > 0) {
+                    if (this.Ctx!.mario.Hitbox.Collides(this.Hitbox)) {
+                        this.FacingRight = true;
+                    }
+                }
                 this.Hitbox.pos.x--;
             }
             else
             {
                 this.Hitbox.pos.x--;
-                FacingRight = !(this.Ctx!.CollidingObjects(this.Hitbox).Length == 0);
+                var LeftCollision = this.Ctx!.CollidingObjects(this.Hitbox);
+                FacingRight = LeftCollision.Length != 0;
+                if (LeftCollision.Length > 0) {
+                    if (this.Ctx!.mario.Hitbox.Collides(this.Hitbox)) {
+                        this.FacingRight = false;
+                    }
+                }
                 this.Hitbox.pos.x++;
             }
 
@@ -66,6 +78,11 @@ namespace SuperMario
                 TimeFallen = 0;
             }
 
+            this.CheckAnimationState();
+
+            this.Pos.x += velocity.x;
+            this.Pos.y += velocity.y;
+
             if (Ctx!.mario.Hitbox.Collides(this.Hitbox))
             {
                 var KillMarioHitbox = new Hitbox(
@@ -75,24 +92,14 @@ namespace SuperMario
 
                 if (Ctx!.mario.Hitbox.Collides(KillMarioHitbox))
                 {
-                    // kill mario
+                    Ctx!.mario.Kill();
                 }
                 else
                 {
-                    // kill goomba
                     this.Kill();
                 }
 
             }
-
-            this.Hitbox.pos.y--;
-            var hitRoof = this.Ctx!.CollidingObjects(this.Hitbox).Length > 0;
-            this.Hitbox.pos.y++;
-
-            this.CheckAnimationState();
-
-            this.Pos.x += velocity.x;
-            this.Pos.y += velocity.y;
 
         }
 

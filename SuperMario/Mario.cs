@@ -24,6 +24,9 @@ namespace SuperMario
         bool Sprinting = false;
         bool StoppedJump = false;
         public Mario(Vector2 pos, Vector2 size) : base(pos, size, Utils.ImageFromPath("sprites/mario_stand.png"), null) { }
+        public void Kill() {
+            throw new Exception("You died.");
+        }
         public void Tick()
         {
             this.velocity = new Vector2(0, 0);
