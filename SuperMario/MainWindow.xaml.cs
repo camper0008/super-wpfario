@@ -22,6 +22,9 @@ namespace SuperMario
             this.InitializeCanvas();
             this.InitializeContext();
 
+            this.Width = LevelUtils.CANVAS_WIDTH + 60;
+            this.Height = LevelUtils.CANVAS_HEIGHT + 60;
+
             RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.NearestNeighbor);
 
             new Thread(ctx!.Tick).Start();
@@ -75,8 +78,8 @@ namespace SuperMario
         {
             var canvas = new Canvas();
             canvas.Background = Brushes.Blue;
-            canvas.Width = 1400;
-            canvas.Height = 900;
+            canvas.Width = LevelUtils.CANVAS_WIDTH;
+            canvas.Height = LevelUtils.CANVAS_HEIGHT;
             canvas.ClipToBounds = true;
 
             this.Content = canvas;
@@ -85,13 +88,9 @@ namespace SuperMario
 
         private void InitializeContext()
         {
-            var player = new Mario(new Vector2(0, 0), new Vector2(80, 80));
-            var ctx = new Context(LevelStaticSprites(), new DynamicSprite[0], player, canvas!);
+            var level = LevelUtils.LevelFromTxt("levels/01.level");
+            var ctx = new Context(level.statics, level.enemies, level.mario, canvas!);
             this.ctx = ctx;
         }
-
-
-
-
     }
 }

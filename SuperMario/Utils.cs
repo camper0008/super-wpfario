@@ -1,13 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Collections.Generic;
 
 namespace SuperMario {
-
     class Utils {
+
         public static Image ImageFromPath(string path) {
             Image img = new Image();
             var src = BitmapSourceFromPath(path);
@@ -39,8 +39,6 @@ namespace SuperMario {
             return flipped;
         }
     }
-
-
 }
 
 

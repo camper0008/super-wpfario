@@ -15,14 +15,14 @@ namespace SuperMario
         Vector2 cameraOffset = new Vector2(0, 0);
         Dictionary<Key, bool> keysDown = new Dictionary<Key, bool> { };
 
-        public Context(Sprite[] static_objects, DynamicSprite[] enemies, Mario player, Canvas canvas)
+        public Context(Sprite[] static_objects, DynamicSprite[] enemies, Mario mario, Canvas canvas)
         {
             this.canvas = canvas;
 
             renderables = new Sprite[static_objects.Length + enemies.Length + 1];
             static_objects.CopyTo(renderables, 0);
             enemies.CopyTo(renderables, static_objects.Length);
-            renderables[static_objects.Length + enemies.Length] = player;
+            renderables[static_objects.Length + enemies.Length] = mario;
             for (int i = 0; i < renderables.Length; i++)
             {
                 renderables[i].Ctx = this;
@@ -30,9 +30,9 @@ namespace SuperMario
             }
 
             dynamics = new DynamicSprite[enemies.Length + 1];
-            dynamics[0] = player;
+            dynamics[0] = mario;
             enemies.CopyTo(dynamics, 1);
-            mario = player;
+            this.mario = mario;
         }
 
         public void SetKeyDown(Key key)
