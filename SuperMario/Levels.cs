@@ -60,11 +60,18 @@ namespace SuperMario
                                 statics.Add(ground);
                                 break;
                             }
-                        case '@':
+                        case 'M':
                             {
-                                mario = new Mario(new Vector2(x*BLOCK_SIZE, CANVAS_HEIGHT - (BLOCK_SIZE * (1 + y))), new Vector2(BLOCK_SIZE, BLOCK_SIZE));
+                                mario = new Mario(new Vector2(x * BLOCK_SIZE, CANVAS_HEIGHT - (BLOCK_SIZE * (1 + y))), new Vector2(BLOCK_SIZE, BLOCK_SIZE));
                                 break;
                             }
+                        case 'G':
+                            {
+                                var goomba = new Goomba(new Vector2(x * BLOCK_SIZE, CANVAS_HEIGHT - (BLOCK_SIZE * (1 + y))), new Vector2(BLOCK_SIZE, BLOCK_SIZE));
+                                enemies.Add(goomba);
+                                break;
+                            }
+
                     }
                 }
             }

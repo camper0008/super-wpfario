@@ -15,7 +15,7 @@ namespace SuperMario
     class Mario : Sprite, DynamicSprite, AnimatedSprite
     {
         MarioAnimationState AnimState = MarioAnimationState.Standing;
-        int MarioRunFrame = 0;
+        int RunFrame = 0;
         bool StateChanged = true;
         bool FacingRight = true;
         Vector2 velocity = new(0, 0);
@@ -95,18 +95,18 @@ namespace SuperMario
                 FacingRight = velocity.x > 0;
                 if (Sprinting)
                 {
-                    MarioRunFrame += 2;
+                    RunFrame += 2;
                 }
                 else
                 {
-                    MarioRunFrame += 1;
+                    RunFrame += 1;
                 }
-                MarioRunFrame %= 12;
+                RunFrame %= 12;
             }
             else if (this.AnimState != MarioAnimationState.Standing)
             {
                 this.StateChanged = true;
-                MarioRunFrame = 0;
+                RunFrame = 0;
                 AnimState = MarioAnimationState.Standing;
             }
 
@@ -127,7 +127,7 @@ namespace SuperMario
                     path = "sprites/mario_stand.png";
                     break;
                 case MarioAnimationState.Running:
-                    var clamped = (int)Math.Floor(MarioRunFrame / 4.0);
+                    var clamped = (int)Math.Floor(RunFrame / 4.0);
                     path = $"sprites/mario_run_{clamped}.png";
                     break;
                 case MarioAnimationState.Jumping:

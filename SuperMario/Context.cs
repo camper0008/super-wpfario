@@ -9,7 +9,7 @@ namespace SuperMario
     class Context
     {
         readonly Sprite[] renderables;
-        readonly Mario mario;
+        public readonly Mario mario;
         readonly DynamicSprite[] dynamics;
         readonly Canvas canvas;
         Vector2 cameraOffset = new Vector2(0, 0);

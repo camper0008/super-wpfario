@@ -7,6 +7,7 @@ namespace SuperMario
     {
         public Vector2 pos;
         public Vector2 size;
+        public bool Active = true;
 
         public Hitbox(Vector2 pos, Vector2 size)
         {
@@ -16,7 +17,7 @@ namespace SuperMario
 
         public bool Collides(Hitbox other)
         {
-            if (this == other) return false;
+            if (this == other || !this.Active || !other.Active) return false;
             if (this.pos.x < other.pos.x + other.size.x &&
                 this.pos.x + this.size.x > other.pos.x &&
                 this.pos.y < other.pos.y + other.size.y &&
