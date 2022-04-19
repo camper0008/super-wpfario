@@ -16,7 +16,8 @@ namespace SuperMario
         {
             Dead = true;
             this.Hitbox.Active = false;
-            this.Img.Dispatcher.Invoke(() => {
+            this.Img.Dispatcher.Invoke(() =>
+            {
                 this.Img.RenderTransform = new RotateTransform(180);
             });
         }
@@ -37,8 +38,10 @@ namespace SuperMario
                 this.Hitbox.pos.x++;
                 var RightCollision = this.Ctx!.CollidingObjects(this.Hitbox);
                 FacingRight = RightCollision.Length == 0;
-                if (RightCollision.Length > 0) {
-                    if (this.Ctx!.mario.Hitbox.Collides(this.Hitbox)) {
+                if (RightCollision.Length > 0)
+                {
+                    if (this.Ctx!.mario.Hitbox.Collides(this.Hitbox))
+                    {
                         this.FacingRight = true;
                     }
                 }
@@ -49,8 +52,10 @@ namespace SuperMario
                 this.Hitbox.pos.x--;
                 var LeftCollision = this.Ctx!.CollidingObjects(this.Hitbox);
                 FacingRight = LeftCollision.Length != 0;
-                if (LeftCollision.Length > 0) {
-                    if (this.Ctx!.mario.Hitbox.Collides(this.Hitbox)) {
+                if (LeftCollision.Length > 0)
+                {
+                    if (this.Ctx!.mario.Hitbox.Collides(this.Hitbox))
+                    {
                         this.FacingRight = false;
                     }
                 }

@@ -26,18 +26,21 @@ namespace SuperMario
         bool StoppedJump = false;
         bool Dead = false;
         public Mario(Vector2 pos, Vector2 size) : base(pos, size, Utils.ImageFromPath("sprites/mario_stand.png"), null) { }
-        public void Kill() {
+        public void Kill()
+        {
             this.Dead = true;
             this.TimeFallen = 0;
             this.Hitbox.Active = false;
             this.AnimState = MarioAnimationState.Dead;
-            this.Img.Dispatcher.Invoke(() => {
+            this.Img.Dispatcher.Invoke(() =>
+            {
                 this.Img.Source = Utils.BitmapSourceFromPath("sprites/mario_dead.png");
             });
         }
         public void Tick()
         {
-            if (this.Dead) {
+            if (this.Dead)
+            {
                 this.TimeFallen++;
                 this.Pos.y = this.Pos.y += TimeFallen;
                 return;
@@ -104,7 +107,8 @@ namespace SuperMario
 
         void CheckAnimationState()
         {
-            if (this.Dead) {
+            if (this.Dead)
+            {
                 this.AnimState = MarioAnimationState.Dead;
             }
             if (velocity.x != 0)

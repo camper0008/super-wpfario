@@ -1,15 +1,9 @@
 using System;
 using System.IO;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Collections.Generic;
 
 namespace SuperMario
 {
-
-
-
     class Level
     {
         public Mario mario;

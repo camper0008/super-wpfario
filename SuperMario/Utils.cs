@@ -3,19 +3,21 @@ using System.IO;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Collections.Generic;
 
-namespace SuperMario {
-    class Utils {
-
-        public static Image ImageFromPath(string path) {
+namespace SuperMario
+{
+    class Utils
+    {
+        public static Image ImageFromPath(string path)
+        {
             Image img = new Image();
             var src = BitmapSourceFromPath(path);
             img.Source = src;
 
             return img;
         }
-        public static BitmapImage BitmapSourceFromPath(string path) {
+        public static BitmapImage BitmapSourceFromPath(string path)
+        {
             string wd = Directory.GetCurrentDirectory();
             var src = new BitmapImage();
             src.BeginInit();
@@ -24,7 +26,8 @@ namespace SuperMario {
 
             return src;
         }
-        public static TransformedBitmap FlippedBitmapSourceFromPath(string path) {
+        public static TransformedBitmap FlippedBitmapSourceFromPath(string path)
+        {
             string wd = Directory.GetCurrentDirectory();
             var src = new BitmapImage();
             src.BeginInit();
