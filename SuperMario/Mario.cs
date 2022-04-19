@@ -11,6 +11,7 @@ namespace SuperMario
         Walking,
         Running,
         Jumping,
+        Dead,
     }
     class Mario : Sprite, DynamicSprite, AnimatedSprite
     {
@@ -23,12 +24,24 @@ namespace SuperMario
         bool InAir = true;
         bool Sprinting = false;
         bool StoppedJump = false;
+        bool Dead = false;
         public Mario(Vector2 pos, Vector2 size) : base(pos, size, Utils.ImageFromPath("sprites/mario_stand.png"), null) { }
         public void Kill() {
-            throw new Exception("You died.");
+            this.Dead = true;
+            this.TimeFallen = 0;
+            this.Hitbox.Active = false;
+            this.AnimState = MarioAnimationState.Dead;
+            this.Img.Dispatcher.Invoke(() => {
+                this.Img.Source = Utils.BitmapSourceFromPath("sprites/mario_dead.png");
+            });
         }
         public void Tick()
         {
+            if (this.Dead) {
+                this.TimeFallen++;
+                this.Pos.y = this.Pos.y += TimeFallen;
+                return;
+            }
             this.velocity = new Vector2(0, 0);
 
             if (this.Ctx!.IsKeyDown(Key.W) && !StoppedJump)
@@ -91,6 +104,9 @@ namespace SuperMario
 
         void CheckAnimationState()
         {
+            if (this.Dead) {
+                this.AnimState = MarioAnimationState.Dead;
+            }
             if (velocity.x != 0)
             {
                 this.StateChanged = true;
@@ -126,6 +142,9 @@ namespace SuperMario
             string path;
             switch (this.AnimState)
             {
+                case MarioAnimationState.Dead:
+                    path = "";
+                    return;
                 case MarioAnimationState.Standing:
                     path = "sprites/mario_stand.png";
                     break;
