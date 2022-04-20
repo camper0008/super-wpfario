@@ -46,7 +46,7 @@ namespace SuperMario
         private void InitializeCanvas()
         {
             var canvas = new Canvas();
-            canvas.Background = Brushes.Blue;
+            canvas.Background = Brushes.DodgerBlue;
             canvas.Width = LevelUtils.CANVAS_WIDTH;
             canvas.Height = LevelUtils.CANVAS_HEIGHT;
             canvas.ClipToBounds = true;
@@ -58,7 +58,7 @@ namespace SuperMario
         private void InitializeContext()
         {
             var level = LevelUtils.LevelFromTxt("levels/01.level");
-            var ctx = new Context(level.statics, level.enemies, level.mario, canvas!);
+            var ctx = new Context(level.statics, level.enemies, this.canvas!, level.mario, level.luigi);
             this.ctx = ctx;
         }
     }

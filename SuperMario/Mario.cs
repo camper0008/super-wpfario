@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace SuperMario
 {
-    enum MarioAnimationState
+    enum PlayerAnimationState
     {
         Standing,
         Walking,
@@ -15,27 +15,25 @@ namespace SuperMario
     }
     class Mario : Sprite, DynamicSprite, AnimatedSprite
     {
-        MarioAnimationState AnimState = MarioAnimationState.Standing;
-        int RunFrame = 0;
-        bool StateChanged = true;
-        bool FacingRight = true;
-        Vector2 velocity = new(0, 0);
-        int TimeFallen = 0;
-        bool InAir = true;
-        bool Sprinting = false;
-        bool StoppedJump = false;
-        bool Dead = false;
+        protected PlayerAnimationState AnimState = PlayerAnimationState.Standing;
+        protected int RunFrame = 0;
+        protected bool FacingRight = true;
+        protected Vector2 velocity = new(0, 0);
+        protected int TimeFallen = 0;
+        protected bool InAir = true;
+        protected bool Sprinting = false;
+        protected bool StoppedJump = false;
+        protected bool Dead = false;
+        protected Key JumpKey = Key.W;
+        protected Key LeftKey = Key.A;
+        protected Key RightKey = Key.D;
         public Mario(Vector2 pos, Vector2 size) : base(pos, size, Utils.ImageFromPath("sprites/mario_stand.png"), null) { }
         public void Kill()
         {
             this.Dead = true;
             this.TimeFallen = 0;
             this.Hitbox.Active = false;
-            this.AnimState = MarioAnimationState.Dead;
-            this.Img.Dispatcher.Invoke(() =>
-            {
-                this.Img.Source = Utils.BitmapSourceFromPath("sprites/mario_dead.png");
-            });
+            this.AnimState = PlayerAnimationState.Dead;
         }
         public void Tick()
         {
@@ -47,7 +45,7 @@ namespace SuperMario
             }
             this.velocity = new Vector2(0, 0);
 
-            if (this.Ctx!.IsKeyDown(Key.W) && !StoppedJump)
+            if (this.Ctx!.IsKeyDown(this.JumpKey) && !StoppedJump)
             {
                 velocity.y -= 3 * (14 - TimeFallen);
             }
@@ -64,9 +62,9 @@ namespace SuperMario
                 modifier = 24;
                 Sprinting = true;
             }
-            if (this.Ctx!.IsKeyDown(Key.D))
+            if (this.Ctx!.IsKeyDown(this.RightKey))
                 velocity.x += 1 * modifier;
-            if (this.Ctx!.IsKeyDown(Key.A))
+            if (this.Ctx!.IsKeyDown(this.LeftKey))
                 velocity.x -= 1 * modifier;
 
 
@@ -109,12 +107,12 @@ namespace SuperMario
         {
             if (this.Dead)
             {
-                this.AnimState = MarioAnimationState.Dead;
+                this.AnimState = PlayerAnimationState.Dead;
+                return;
             }
             if (velocity.x != 0)
             {
-                this.StateChanged = true;
-                AnimState = MarioAnimationState.Running;
+                AnimState = PlayerAnimationState.Running;
                 FacingRight = velocity.x > 0;
                 if (Sprinting)
                 {
@@ -126,37 +124,33 @@ namespace SuperMario
                 }
                 RunFrame %= 12;
             }
-            else if (this.AnimState != MarioAnimationState.Standing)
+            else if (this.AnimState != PlayerAnimationState.Standing)
             {
-                this.StateChanged = true;
                 RunFrame = 0;
-                AnimState = MarioAnimationState.Standing;
+                AnimState = PlayerAnimationState.Standing;
             }
-
             if (this.InAir)
             {
-                this.AnimState = MarioAnimationState.Jumping;
+                this.AnimState = PlayerAnimationState.Jumping;
             }
         }
 
         public void Animate()
         {
-            if (!StateChanged) return;
-
             string path;
             switch (this.AnimState)
             {
-                case MarioAnimationState.Dead:
-                    path = "";
-                    return;
-                case MarioAnimationState.Standing:
+                case PlayerAnimationState.Dead:
+                    path = "sprites/mario_dead.png";
+                    break;
+                case PlayerAnimationState.Standing:
                     path = "sprites/mario_stand.png";
                     break;
-                case MarioAnimationState.Running:
+                case PlayerAnimationState.Running:
                     var clamped = (int)Math.Floor(RunFrame / 4.0);
                     path = $"sprites/mario_run_{clamped}.png";
                     break;
-                case MarioAnimationState.Jumping:
+                case PlayerAnimationState.Jumping:
                     path = $"sprites/mario_jump.png";
                     break;
                 default:

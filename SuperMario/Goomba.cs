@@ -88,20 +88,44 @@ namespace SuperMario
             this.Pos.x += velocity.x;
             this.Pos.y += velocity.y;
 
-            if (Ctx!.mario.Hitbox.Collides(this.Hitbox))
+            this.PlayerCollisionCheck();
+        }
+
+        void PlayerCollisionCheck()
+        {
+            if (this.Ctx!.mario.Hitbox.Collides(this.Hitbox))
             {
-                var KillMarioHitbox = new Hitbox(
+                var KillPlayerHitbox = new Hitbox(
                     new Vector2(this.Hitbox.pos.x, this.Hitbox.pos.y + (int)(this.Hitbox.size.y * 0.4)),
                     new Vector2(this.Hitbox.size.x, (int)(this.Hitbox.size.y * 0.6))
                 );
 
-                if (Ctx!.mario.Hitbox.Collides(KillMarioHitbox))
+                if (Ctx!.mario.Hitbox.Collides(KillPlayerHitbox))
                 {
                     Ctx!.mario.Kill();
                 }
                 else
                 {
                     this.Kill();
+                }
+            }
+            else if (Ctx!.luigi?.Hitbox.Collides(this.Hitbox) ?? false)
+            {
+                if (this.Ctx!.luigi.Hitbox.Collides(this.Hitbox))
+                {
+                    var KillPlayerHitbox = new Hitbox(
+                        new Vector2(this.Hitbox.pos.x, this.Hitbox.pos.y + (int)(this.Hitbox.size.y * 0.4)),
+                        new Vector2(this.Hitbox.size.x, (int)(this.Hitbox.size.y * 0.6))
+                    );
+
+                    if (Ctx!.luigi.Hitbox.Collides(KillPlayerHitbox))
+                    {
+                        Ctx!.luigi.Kill();
+                    }
+                    else
+                    {
+                        this.Kill();
+                    }
                 }
 
             }

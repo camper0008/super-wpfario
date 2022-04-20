@@ -10,29 +10,59 @@ namespace SuperMario
     {
         readonly Sprite[] renderables;
         public readonly Mario mario;
+        public readonly Luigi? luigi;
         readonly DynamicSprite[] dynamics;
         readonly Canvas canvas;
         Vector2 cameraOffset = new Vector2(0, 0);
         Dictionary<Key, bool> keysDown = new Dictionary<Key, bool> { };
 
-        public Context(Sprite[] static_objects, DynamicSprite[] enemies, Mario mario, Canvas canvas)
+        Sprite[] InitializeRenderables(Sprite[] statics, DynamicSprite[] dynamics, Mario mario, Luigi? luigi)
         {
-            this.canvas = canvas;
+            var renderables = new Sprite[
+                statics.Length +
+                dynamics.Length +
+                1 +
+                (luigi != null ? 1 : 0)
+            ];
 
-            renderables = new Sprite[static_objects.Length + enemies.Length + 1];
-            static_objects.CopyTo(renderables, 0);
-            enemies.CopyTo(renderables, static_objects.Length);
-            renderables[static_objects.Length + enemies.Length] = mario;
+            statics.CopyTo(renderables, 0);
+            dynamics.CopyTo(renderables, statics.Length);
+            renderables[statics.Length + dynamics.Length] = mario;
+            if (luigi != null)
+                renderables[statics.Length + dynamics.Length + 1] = luigi;
+
             for (int i = 0; i < renderables.Length; i++)
             {
                 renderables[i].Ctx = this;
                 this.canvas.Children.Add(renderables[i].Img);
             }
 
-            dynamics = new DynamicSprite[enemies.Length + 1];
-            dynamics[0] = mario;
-            enemies.CopyTo(dynamics, 1);
+            return renderables;
+        }
+        DynamicSprite[] InitializeDynamics(DynamicSprite[] npds, Mario mario, Luigi? luigi)
+        {
+            var res = new DynamicSprite[
+                npds.Length +
+                1 +
+                (luigi != null ? 1 : 0)
+            ];
+            res[0] = mario;
+            if (luigi != null)
+                res[1] = luigi;
+
+            npds.CopyTo(res, 1 + (luigi != null ? 1 : 0));
+
+            return res;
+
+        }
+        public Context(Sprite[] statics, DynamicSprite[] npds, Canvas canvas, Mario mario, Luigi? luigi)
+        {
+            this.canvas = canvas;
+            this.renderables = this.InitializeRenderables(statics, npds, mario, luigi);
+            this.dynamics = InitializeDynamics(npds, mario, luigi);
+
             this.mario = mario;
+            this.luigi = luigi;
         }
 
         public void SetKeyDown(Key key)

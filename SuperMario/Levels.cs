@@ -7,12 +7,14 @@ namespace SuperMario
     class Level
     {
         public Mario mario;
+        public Luigi? luigi;
         public Sprite[] statics;
         public DynamicSprite[] enemies;
 
-        public Level(Mario mario, Sprite[] statics, DynamicSprite[] enemies)
+        public Level(Mario mario, Luigi? luigi, Sprite[] statics, DynamicSprite[] enemies)
         {
             this.mario = mario;
+            this.luigi = luigi;
             this.statics = statics;
             this.enemies = enemies;
         }
@@ -31,6 +33,7 @@ namespace SuperMario
             string file_content = File.ReadAllText(wd + "/" + path);
 
             Mario mario = new Mario(new Vector2(0, 0), new Vector2(BLOCK_SIZE, BLOCK_SIZE));
+            Luigi? luigi = null;
             var statics = new List<Sprite>();
             var enemies = new List<DynamicSprite>();
 
@@ -59,18 +62,22 @@ namespace SuperMario
                                 mario = new Mario(new Vector2(x * BLOCK_SIZE, CANVAS_HEIGHT - (BLOCK_SIZE * (1 + y))), new Vector2(BLOCK_SIZE, BLOCK_SIZE));
                                 break;
                             }
+                        case 'L':
+                            {
+                                luigi = new Luigi(new Vector2(x * BLOCK_SIZE, CANVAS_HEIGHT - (BLOCK_SIZE * (1 + y))), new Vector2(BLOCK_SIZE, BLOCK_SIZE));
+                                break;
+                            }
                         case 'G':
                             {
                                 var goomba = new Goomba(new Vector2(x * BLOCK_SIZE, CANVAS_HEIGHT - (BLOCK_SIZE * (1 + y))), new Vector2(BLOCK_SIZE, BLOCK_SIZE));
                                 enemies.Add(goomba);
                                 break;
                             }
-
                     }
                 }
             }
 
-            return new Level(mario, statics.ToArray(), enemies.ToArray());
+            return new Level(mario, luigi, statics.ToArray(), enemies.ToArray());
         }
     }
 }
